@@ -1,0 +1,15 @@
+opt_name,val
+clock,1
+tenki,270000
+prefecture,
+haikei,1
+idokeido,34.69612,135.508
+weatherday,3,1
+fontcolor,0.9,0.19999999999999996,1,1
+backcolor,0.29999999999999993,0.19999999999999996,1,1
+clockselect,1
+setflg,0
+syoki,0
+umu,on,on,on,on
+
+gazouhaikei,MAINSYS\IMAGE\J5G.jpg

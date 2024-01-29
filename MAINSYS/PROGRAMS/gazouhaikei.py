@@ -109,78 +109,77 @@ class Test(BoxLayout):
         self.image.source = self.image_name
 
     def confirm_action(self, instance):
-        self.setflg(1)
-        syokiflg,setflg = self.optflg()
-        if syokiflg == '0' and setflg == '0':
-            # MAINSYS\CSV\selected_backgrounds.csv に self.image_name を上書き保存
-            csv_file_path = os.path.join("MAINSYS", "CSV", "selected_backgrounds.csv")
-            with open(csv_file_path, mode='w', newline='') as csv_file:
-                csv_writer = csv.writer(csv_file)
-                csv_writer.writerow([self.image_name])
+        # 保存機能を削除し、代わりにCSVに保存していた情報をprintで表示
+        syokiflg, setflg = self.optflg()
+        filename = os.path.join(os.path.dirname(__file__), "onoD_opt.csv")
+        with open(filename, 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            data = list(reader)
+            if syokiflg == '0' and setflg == '0':
+                print(f"Image confirmed: {self.image_name}")
+                #csvに保存
+                data[14][1]= self.image_name
+                data[4][1] = 1
+                with open(filename, 'w', newline='') as csvfile:
+                    csv_writer = csv.writer(csvfile)
+                    csv_writer.writerows(data)
+                    print("保存されました！")
 
-            print(f"Image confirmed: {self.image_name}")
-
-            # "haikeigazou.py" を実行
-            subprocess.Popen(["python", "MAINSYS\PROGRAMS\pos_mover.py"])
-            App.get_running_app().stop()
-        elif syokiflg == '1' and setflg == '1':
-            # MAINSYS\CSV\selected_backgrounds.csv に self.image_name を上書き保存
-            csv_file_path = os.path.join("MAINSYS", "CSV", "selected_backgrounds.csv")
-            with open(csv_file_path, mode='w', newline='') as csv_file:
-                csv_writer = csv.writer(csv_file)
-                csv_writer.writerow([self.image_name])
-
-            print(f"Image confirmed: {self.image_name}")
-            pass
-        else :
-            subprocess.Popen(["python", "MAINSYS\PROGRAMS\error.py"])
-        App.get_running_app().stop()
-
-    #def next_image(self, instance):
-    #    images = [f for f in os.listdir("MAINSYS/IMAGE") if f.lower().endswith(('.jpeg', '.jpg', '.png'))]
-    #    images = sorted(images)
-    #    self.current_image_index = (self.current_image_index + 1) % len(images)
-    #    next_image_path = os.path.join("MAINSYS/IMAGE", images[self.current_image_index])
-    #    self.image_name = next_image_path
-    #    Clock.schedule_once(self.update)
+                # "haikeigazou.py" を実行
+                subprocess.Popen(["python", "MAINSYS\PROGRAMS\pos_mover.py"])
+                App.get_running_app().stop()
+            elif syokiflg == '1' and setflg == '1':
+                print(f"Image confirmed: {self.image_name}")
+                # 何らかの処理を追加する場合はここに記述
+                #csvに保存
+                data[14][1]= self.image_name
+                data[4][1] = 1
+                with open(filename, 'w', newline='') as csvfile:
+                    csv_writer = csv.writer(csvfile)
+                    csv_writer.writerows(data)
+                    print("保存されました！")
+                App.get_running_app().stop()
+                pass
+            else:
+                subprocess.Popen(["python", "MAINSYS\PROGRAMS\error.py"])
+                App.get_running_app().stop()
 
     def prev_image(self, instance):
         # 戻るボタンが押下されたときの処理
-        syokiflg,setflg = self.optflg()
+        syokiflg, setflg = self.optflg()
         if syokiflg == '0' and setflg == '0':
             subprocess.Popen(["python", "MAINSYS\PROGRAMS\syoki.py"])
         elif syokiflg == '1' and setflg == '1':
             pass
-        else :
+        else:
             subprocess.Popen(["python", "MAINSYS\PROGRAMS\error.py"])
-        App.get_running_app().stop()
-    
+            App.get_running_app().stop()
+
     def optflg(self):
-        filename = 'MAINSYS\CSV\onoD_opt.csv'
+        filename = os.path.join(os.path.dirname(__file__), "onoD_opt.csv")
         
         with open(filename, 'r') as csvfile:
             reader = csv.reader(csvfile)
             data = list(reader)
             syokiopt = data[11][1]
             setopt = data[10][1]
-            
 
         return syokiopt, setopt
-    
-    def setflg(self,flgval):   # CSVファイルに設定用フラグを保存するメソッド
-        filename = 'MAINSYS\CSV\onoD_opt.csv'
+
+    def setflg(self, flgval):   # CSVファイルに設定用フラグを保存するメソッド
+        filename = os.path.join(os.path.dirname(__file__), "onoD_opt.csv")
         with open(filename, 'r') as csvfile:
             reader = csv.reader(csvfile)
             data = list(reader)
             print(flgval)
             data[4][1] = flgval
-        
+
         with open(filename, 'w', newline='') as csvfile:
             csv_writer = csv.writer(csvfile)
             csv_writer.writerows(data)
         print("保存されました！")
 
-        return 
+        return
 
 class SampleApp(App):
     def build(self):
