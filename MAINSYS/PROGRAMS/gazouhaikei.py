@@ -14,6 +14,8 @@ from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 import japanize_kivy
 
+
+
 class MyButton(ToggleButtonBehavior, Image):
     def __init__(self, **kwargs):
         super(MyButton, self).__init__(**kwargs)
