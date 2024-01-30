@@ -6,10 +6,16 @@ haikei,1
 idokeido,34.69612,135.508
 weatherday,3,1
 fontcolor,0.9,0.19999999999999996,1,1
-backcolor,0.29999999999999993,0.19999999999999996,1,1
+backcolor,0.6,1.0,1,1
 clockselect,1
 setflg,0
-syoki,0
+syoki,1
 umu,on,on,on,on
 
-gazouhaikei,MAINSYS\IMAGE\J5G.jpg
+gazouhaikei,MAINSYS\IMAGE\fuukei.jpg
+
+
+clock_pos,50,100
+weather_pos,100,100
+schedule_pos,150,100
+add_pos,200,100

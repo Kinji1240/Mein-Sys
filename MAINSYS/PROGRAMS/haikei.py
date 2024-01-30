@@ -75,7 +75,8 @@ class BackgroundChangerApp(App):
             writer.writerows(data)
 
         # 保存後に別のPythonスクリプトを実行
-        script_path = 'MAINSYS\PROGRAMS\pos_mover.py'
+        script_path = os.path.join(os.path.dirname(__file__), "pos_mover.py")
+            
         if os.path.exists(script_path):
             setflg_row = 10  # 設定画面遷移時に使用するフラグの保存行番号
             syokiflg_row = 11 # 初期設定時に使用するフラグの保存行番号

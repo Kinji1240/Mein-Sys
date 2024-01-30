@@ -146,12 +146,23 @@ class ButtonMoverApp(App):
 
     def save_button_positions(self):
         # 各ボタンの座標をCSVファイルに保存するメソッド
-        filename = 'MAINSYS\CSV\move.csv'
-        with open(filename, 'w', newline='') as csvfile:
-            csv_writer = csv.writer(csvfile)
+        filename = os.path.join(os.path.dirname(__file__), "onoD_opt.csv")
+        with open(filename, 'r', newline='') as file:
+            reader = csv.reader(file)
+            data = list(reader)
+            i = 1
             for button in self.buttons:
                 button_pos = button.pos
-                csv_writer.writerow([button_pos[0], button_pos[1]])
+                x = button_pos[0]
+                y = button_pos[1]
+
+                data[16 + i][1] = x
+                data[16 + i][2] = y
+                i +=  1
+        # 新しいCSVファイルに書き出す
+        with open(filename, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerows(data)
 
     def on_confirm_button_press(self, instance):
         # 確定ボタンが押下されたときの処理
@@ -182,7 +193,7 @@ class ButtonMoverApp(App):
         self.background_rect.size = self.layout.size
     
     def loadhaikei(self):
-        filename = 'MAINSYS\CSV\onoD_opt.csv'
+        filename = os.path.join(os.path.dirname(__file__), "onoD_opt.csv")
         
         with open(filename, 'r') as csvfile:
             reader = csv.reader(csvfile)
@@ -192,7 +203,7 @@ class ButtonMoverApp(App):
         return optdata
     
     def optflg(self):
-        filename = 'MAINSYS\CSV\onoD_opt.csv'
+        filename = os.path.join(os.path.dirname(__file__), "onoD_opt.csv")
         
         with open(filename, 'r') as csvfile:
             reader = csv.reader(csvfile)
