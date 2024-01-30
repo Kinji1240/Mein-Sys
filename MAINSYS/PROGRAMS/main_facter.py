@@ -41,11 +41,11 @@ class MainDisplayApp(App):
         print("bgopt:", bgopt)
         if bgopt == "2":
             #背景色
-            print("color_settings.csv を使用します")
-            background_color = self.get_background_color("MAINSYS\CSV\color_settings.csv")
+            print("onoD_opt.csv を使用します")
+            background_color = self.get_background_color("MAINSYS\CSV\onoD_opt.csv")
             background_image_path = None
         else:
-            print("selected_backgrounds.csv を使用します")
+            print("onoD_opt.csv を使用します")
             # 背景の色と画像のパスを取得
             background_color, background_image_path = self.get_background_settings()
         
@@ -160,12 +160,13 @@ class MainDisplayApp(App):
         try:
             with open(csv_file, "r", encoding="utf-8") as file:
                 reader = csv.reader(file)
-                next(reader)  # ヘッダー行をスキップ
-                row = next(reader, None)
-                if row:
-                    background_color = (float(row[0]), float(row[1]), float(row[2]), float(row[3]))
-                else:
-                    background_color = (1, 1, 1, 1)  # デフォルト値
+                data = list(reader)
+                background1 = data[8][1]
+                background2 = data[8][2]
+                background3 = data[8][3]
+                background4 = data[8][4]
+
+                background_color = (float(background1), float(background2), float(background3), float(background4))
         except (FileNotFoundError, ValueError, IndexError):
             # ファイルが存在しない、不正な値、またはインデックスエラーが発生した場合はデフォルト値を返す
             background_color = (1, 1, 1, 1)

@@ -6,21 +6,9 @@ from kivy.uix.colorpicker import ColorPicker
 import csv
 import os
 from kivy.core.window import Window
+import subprocess
 import japanize_kivy
-import subprocess  # 外部スクリプトを実行するために必要なモジュール
-import time
 
-class RunningTask:
-    def __init__(self):
-        self.running = True
-
-    def run(self):
-        while self.running:
-            print("Task is running...")
-            time.sleep(1)
-
-    def stop(self):
-        self.running = False
 class BackgroundChangerApp(App):
     def build(self):
         layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
@@ -33,22 +21,12 @@ class BackgroundChangerApp(App):
         self.background_color_picker = ColorPicker()
         self.background_color_picker.bind(color=self.on_background_color)
 
-        # ラベル（文字色変更用）
-        label_text = Label(text="文字色変更")
-        self.label_text = label_text
-
-        # カラーピッカー（文字色用）
-        self.text_color_picker = ColorPicker()
-        self.text_color_picker.bind(color=self.on_text_color)
-
         # ボタン
-        button = Button(text="背景色を変更", on_press=self.change_background_and_text_color)
+        button = Button(text="背景色を変更", on_press=self.change_background_color)
 
         # レイアウトにウィジェットを追加
         layout.add_widget(label_background)
         layout.add_widget(self.background_color_picker)
-        #layout.add_widget(label_text)
-        #layout.add_widget(self.text_color_picker)
         layout.add_widget(button)
 
         # ウィンドウサイズ変更時にオブジェクトを調整
@@ -61,43 +39,44 @@ class BackgroundChangerApp(App):
         # フォントサイズを調整
         font_size = int(0.04 * height)  # 画面高さの4%をフォントサイズとする
         self.label_background.font_size = font_size
-        self.label_text.font_size = font_size
 
     def on_background_color(self, instance, value):
-        # カラーピッカーの色に背景色を変更
-        # バックグラウンド画像を含む場合に使用
-        pass
+        # ラベルの背景色を変更
+        self.label_background.background_color = value
 
-    def on_text_color(self, instance, value):
-        # ラベルの文字色を変更
-        self.label_background.color = value
-        self.label_text.color = value
-
-    def change_background_and_text_color(self, instance):
-        self.setflg(2)
+    def change_background_color(self, instance):
         # カラーピッカーの選択色をCSVファイルに保存
         background_color = self.background_color_picker.color
-        text_color = self.text_color_picker.color
+        
 
-        # 背景色と文字色のRGBA値を取得
+        # 背景色のRGBA値を取得
         background_red, background_green, background_blue, background_alpha = background_color
-        text_red, text_green, text_blue, text_alpha = text_color
+        
 
-        # csvファイルの保存先ディレクトリ
-        csv_dir = 'MAINSYS/CSV'
 
-        # ディレクトリが存在しない場合、作成
-        if not os.path.exists(csv_dir):
-            os.makedirs(csv_dir)
+        print("確定ボタンが押されました。")
+         # ファイルの読み込みと書き込みはここで行います
+        file_path = os.path.join(os.path.dirname(__file__), "onoD_opt.csv")
 
-        # csvファイルの保存パス
-        csv_path = os.path.join(csv_dir, 'color_settings.csv')
+        # 既存のCSVファイルを読み込む
+        with open(file_path, mode='r') as file:
+            reader = csv.reader(file)
+            data = list(reader)
 
-        self.save_colors_to_csv(csv_path, background_red, background_green, background_blue, background_alpha,
-                                text_red, text_green, text_blue, text_alpha)
+
+        data[8][1] = background_red
+        data[8][2] = background_green
+        data[8][3] = background_blue
+        data[8][4] = background_alpha
+        data[4][1] = 2
+       # 新しいCSVファイルに書き出す
+        with open(file_path, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerows(data)
 
         # 保存後に別のPythonスクリプトを実行
-        script_path = 'MAINSYS\PROGRAMS\pos_mover.py'
+        script_path = os.path.join(os.path.dirname(__file__), "pos_mover.py")
+            
         if os.path.exists(script_path):
             setflg_row = 10  # 設定画面遷移時に使用するフラグの保存行番号
             syokiflg_row = 11 # 初期設定時に使用するフラグの保存行番号
@@ -115,26 +94,9 @@ class BackgroundChangerApp(App):
             print(f"スクリプト '{script_path}' は存在しません。")
             subprocess.Popen(["python", "MAINSYS\PROGRAMS\error.py"])
 
-    def save_colors_to_csv(self, csv_file, background_red, background_green, background_blue, background_alpha,
-                           text_red, text_green, text_blue, text_alpha):
-        with open(csv_file, 'w', newline='') as csvfile:
-            fieldnames = ['BackgroundRed', 'BackgroundGreen', 'BackgroundBlue', 'BackgroundAlpha',
-                          'TextRed', 'TextGreen', 'TextBlue', 'TextAlpha']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerow({
-                'BackgroundRed': background_red,
-                'BackgroundGreen': background_green,
-                'BackgroundBlue': background_blue,
-                'BackgroundAlpha': background_alpha,
-                'TextRed': text_red,
-                'TextGreen': text_green,
-                'TextBlue': text_blue,
-                'TextAlpha': text_alpha
-            })
-    
+
     def optflg(self,val):
-        filename = 'MAINSYS\CSV\onoD_opt.csv'
+        filename = os.path.join(os.path.dirname(__file__), "onoD_opt.csv")
 
         with open(filename, 'r') as csvfile:
             reader = csv.reader(csvfile)
@@ -143,7 +105,7 @@ class BackgroundChangerApp(App):
         return optdata
     
     def setflg(self,flgval):   # CSVファイルに設定用フラグを保存するメソッド
-        filename = 'MAINSYS\CSV\onoD_opt.csv'
+        filename = os.path.join(os.path.dirname(__file__), "onoD_opt.csv")
         with open(filename, 'r') as csvfile:
             reader = csv.reader(csvfile)
             data = list(reader)
@@ -156,6 +118,7 @@ class BackgroundChangerApp(App):
         print("保存されました！")
 
         return 
-    
+
+
 if __name__ == '__main__':
     BackgroundChangerApp().run()
