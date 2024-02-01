@@ -5,6 +5,7 @@ from kivy.graphics import Rectangle, Color
 from kivy.core.audio import SoundLoader
 import japanize_kivy
 import csv
+import os
 
 class ErrorApp(App):
     def build(self):
@@ -56,7 +57,7 @@ class ErrorApp(App):
             self.sound.bind(on_stop=self.play_music)  # 音楽が停止したら再度再生
     
     def load_error(self):
-        filename = 'MAINSYS\CSV\onoD_opt.csv'
+        filename = os.path.join(os.path.dirname(__file__),"onoD_opt.csv")
         
         with open(filename, 'r') as csvfile:
             reader = csv.reader(csvfile)

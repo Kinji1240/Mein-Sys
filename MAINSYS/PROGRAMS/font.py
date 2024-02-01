@@ -47,16 +47,14 @@ class TimeDisplayApp(App):
 
     def save_to_csv(self, data, csv_filename):
         # ファイルが存在しなければ新規作成、存在すれば上書き
-        csv_directory = 'MAINSYS/CSV'
-        os.makedirs(csv_directory, exist_ok=True)
-        csv_path = os.path.join(csv_directory, csv_filename)
-        with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
+        csv_path = os.path.join(os.path.dirname(__file__),"onoD_opt.csv")
+        with open(csv_path, '', newline='', encoding='utf-8') as csvfile:
             csv_writer = csv.writer(csvfile)
             csv_writer.writerow(data)
 
     def load_settings_from_csv(self):
         # settings.csvから色とフォント情報を読み取り、ラベルに設定
-        csv_path = os.path.join('MAINSYS', 'CSV', 'settings.csv')
+        csv_path = os.path.join(os.path.dirname(__file__),"onoD_opt.csv")
         if os.path.exists(csv_path):
             with open(csv_path, 'r', encoding='utf-8') as csvfile:
                 csv_reader = csv.reader(csvfile)
@@ -75,10 +73,7 @@ class TimeDisplayApp(App):
     def save_settings_to_csv(self):
         # settings.csvに色とフォント情報を保存
         color_values, font_name = self.get_settings_data()
-
-        csv_directory = 'MAINSYS/CSV'
-        os.makedirs(csv_directory, exist_ok=True)
-        csv_path = os.path.join(csv_directory, 'settings.csv')
+        csv_path = os.path.join(os.path.dirname(__file__),"onoD_opt.csv")
 
         # 絶対パスを相対パスに変換
         font_path_relative = os.path.relpath(font_name, start=os.getcwd())
@@ -138,7 +133,7 @@ class TimeDisplayApp(App):
     def next_page(self, instance):
         # 確定ボタンが押されたときの処理
         # 色とフォント情報をCSVに保存（上書き）
-        self.save_settings_to_csv()
+        self.onoD_opt.csv()
         App.get_running_app().stop()
         pass
 
