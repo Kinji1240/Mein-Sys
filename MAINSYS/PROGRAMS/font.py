@@ -46,8 +46,12 @@ class TimeDisplayApp(App):
         return self.layout
 
     def save_to_csv(self, data, csv_filename):
+
+
         # ファイルが存在しなければ新規作成、存在すれば上書き
         csv_path = os.path.join(os.path.dirname(__file__),"onoD_opt.csv")
+        with open(csv_path, '', newline='', encoding='utf-8') as csvfile:
+            csv_path = os.path.join(os.path.dirname(__file__),"onoD_opt.csv")
         with open(csv_path, '', newline='', encoding='utf-8') as csvfile:
             csv_writer = csv.writer(csvfile)
             csv_writer.writerow(data)
@@ -78,10 +82,18 @@ class TimeDisplayApp(App):
         # 絶対パスを相対パスに変換
         font_path_relative = os.path.relpath(font_name, start=os.getcwd())
 
+        with open(csv_path, 'r', newline='', encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile)
+            data = list(reader)
+
+            data[7][1] = color_values
+            data[27][1] = font_path_relative  # Save the relative font path
         with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
-            csv_writer = csv.writer(csvfile)
-            csv_writer.writerow(color_values)
-            csv_writer.writerow([font_path_relative])  # Save the relative font path
+            writer = csv.writer(csvfile)
+            writer.writerows(data)
+            #csv_writer = csv.writer(csvfile)
+            #csv_writer.writerow(color_values)
+            #csv_writer.writerow([font_path_relative])  # Save the relative font path
 
     def get_settings_data(self):
         # 現在の色とフォント情報をリストで返す

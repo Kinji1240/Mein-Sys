@@ -6,7 +6,7 @@ from kivy.app import App
 class GentenApp(App):
     def build(self):
         # CSVファイルに緯度・経度・日数を保存するメソッド
-        filename = 'MAINSYS\CSV\onoD_opt.csv'
+        filename = os.path.join(os.path.dirname(__file__), "onoD_opt.csv")
         with open(filename, 'r') as csvfile:
             reader = csv.reader(csvfile)
             data = list(reader)
