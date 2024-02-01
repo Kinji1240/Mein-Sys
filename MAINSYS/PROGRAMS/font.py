@@ -45,34 +45,29 @@ class TimeDisplayApp(App):
 
         return self.layout
 
-    def save_to_csv(self, data, csv_filename):
-
-
-        # ファイルが存在しなければ新規作成、存在すれば上書き
-        csv_path = os.path.join(os.path.dirname(__file__),"onoD_opt.csv")
-        with open(csv_path, '', newline='', encoding='utf-8') as csvfile:
-            csv_path = os.path.join(os.path.dirname(__file__),"onoD_opt.csv")
-        with open(csv_path, '', newline='', encoding='utf-8') as csvfile:
-            csv_writer = csv.writer(csvfile)
-            csv_writer.writerow(data)
 
     def load_settings_from_csv(self):
-        # settings.csvから色とフォント情報を読み取り、ラベルに設定
+        color_values, font_name = self.get_settings_data()
         csv_path = os.path.join(os.path.dirname(__file__),"onoD_opt.csv")
-        if os.path.exists(csv_path):
-            with open(csv_path, 'r', encoding='utf-8') as csvfile:
-                csv_reader = csv.reader(csvfile)
-                row = next(csv_reader, None)  # Read the first row
-                if row:
-                    color_values = [float(value) for value in row]
-                    # 色情報を4つの要素に固定
-                    while len(color_values) < 4:
-                        color_values.append(1.0)  # 不足している場合は1.0で埋める
-                    self.hello_label.color = color_values
 
-                    row = next(csv_reader, None)  # Read the second row
-                    if row:
-                        self.hello_label.font_name = row[0]
+        # 絶対パスを相対パスに変換
+        font_path_relative = os.path.relpath(font_name, start=os.getcwd())
+
+        with open(csv_path, 'r', newline='', encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile)
+            data = list(reader)
+            self.hello_label.font_name = data[27][1]
+                #row = next(csv_reader, None)  # Read the first row
+                #if row:
+                    #color_values = [float(value) for value in row]
+                    # 色情報を4つの要素に固定
+                    #while len(color_values) < 4:
+                        #color_values.append(1.0)  # 不足している場合は1.0で埋める
+                    #self.hello_label.color = color_values
+
+                    #row = next(csv_reader, None)  # Read the second row
+                    #if row:
+                        #self.hello_label.font_name = row[0]
 
     def save_settings_to_csv(self):
         # settings.csvに色とフォント情報を保存
@@ -145,7 +140,7 @@ class TimeDisplayApp(App):
     def next_page(self, instance):
         # 確定ボタンが押されたときの処理
         # 色とフォント情報をCSVに保存（上書き）
-        self.onoD_opt.csv()
+        self.save_settings_to_csv()
         App.get_running_app().stop()
         pass
 
