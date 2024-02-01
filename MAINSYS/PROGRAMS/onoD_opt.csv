@@ -16,6 +16,10 @@ gazouhaikei,MAINSYS\IMAGE\fuukei.jpg
 
 
 clock_pos,50,100
-weather_pos,100,100
-schedule_pos,150,100
-add_pos,200,100
+weather_pos,181.0,186.99999999999997
+schedule_pos,265.0,64.99999999999999
+add_pos,312.0,158.0
+
+
+fontcolor,"[0.8, 1, 0.925, 1]",,,
+font,MAINSYS\FONT\Mystic Soul.ttf

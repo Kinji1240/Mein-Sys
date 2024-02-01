@@ -89,22 +89,25 @@ class TimeDisplayApp(App):
         # settings.csvに色とフォント情報を保存
         color_values, font_name = self.get_settings_data()
 
-        csv_directory = 'MAINSYS/CSV'
-        os.makedirs(csv_directory, exist_ok=True)
-        csv_path = os.path.join(csv_directory, 'settings.csv')
+        csv_path = os.path.join(os.path.dirname(__file__), "onoD_opt.csv")
 
         # 絶対パスを相対パスに変換
         font_path_relative = os.path.relpath(font_name, start=os.getcwd())
 
-        with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
-            csv_writer = csv.writer(csvfile)
-            csv_writer.writerow(color_values)
-            csv_writer.writerow([font_path_relative])  # Save the relative font path
+        with open(csv_path, 'r', newline='', encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile)
+            data = list(reader)
 
+            data[23][1] = color_values
+            data[24][1] = font_path_relative  # Save the relative font path
+        with open(csv_path, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerows(data)
 
     def get_settings_data(self):
         # 現在の色とフォント情報をリストで返す
         color_values = [round(value, 3) for value in self.time_label.color]
+        print(color_values)
         # 色情報を4つの要素に固定
         while len(color_values) < 4:
             color_values.append(1.0)  # 不足している場合は1.0で埋める
