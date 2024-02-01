@@ -46,17 +46,17 @@ class TimeDisplayApp(App):
         return self.layout
 
     def save_to_csv(self, data, csv_filename):
+
+
         # ファイルが存在しなければ新規作成、存在すれば上書き
-        csv_directory = 'MAINSYS/CSV'
-        os.makedirs(csv_directory, exist_ok=True)
-        csv_path = os.path.join(csv_directory, csv_filename)
-        with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
+        csv_path = os.path.join(os.path.dirname(__file__),"onoD_opt.csv")
+        with open(csv_path, '', newline='', encoding='utf-8') as csvfile:
             csv_writer = csv.writer(csvfile)
             csv_writer.writerow(data)
 
     def load_settings_from_csv(self):
         # settings.csvから色とフォント情報を読み取り、ラベルに設定
-        csv_path = os.path.join('MAINSYS', 'CSV', 'settings.csv')
+        csv_path = os.path.join(os.path.dirname(__file__),"settings.csv")
         if os.path.exists(csv_path):
             with open(csv_path, 'r', encoding='utf-8') as csvfile:
                 csv_reader = csv.reader(csvfile)
@@ -75,18 +75,23 @@ class TimeDisplayApp(App):
     def save_settings_to_csv(self):
         # settings.csvに色とフォント情報を保存
         color_values, font_name = self.get_settings_data()
-
-        csv_directory = 'MAINSYS/CSV'
-        os.makedirs(csv_directory, exist_ok=True)
-        csv_path = os.path.join(csv_directory, 'settings.csv')
+        csv_path = os.path.join(os.path.dirname(__file__),"onoD_opt.csv")
 
         # 絶対パスを相対パスに変換
         font_path_relative = os.path.relpath(font_name, start=os.getcwd())
 
+        with open(csv_path, 'r', newline='', encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile)
+            data = list(reader)
+
+            data[7][1] = color_values
+            data[27][1] = font_path_relative  # Save the relative font path
         with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
-            csv_writer = csv.writer(csvfile)
-            csv_writer.writerow(color_values)
-            csv_writer.writerow([font_path_relative])  # Save the relative font path
+            writer = csv.writer(csvfile)
+            writer.writerows(data)
+            #csv_writer = csv.writer(csvfile)
+            #csv_writer.writerow(color_values)
+            #csv_writer.writerow([font_path_relative])  # Save the relative font path
 
     def get_settings_data(self):
         # 現在の色とフォント情報をリストで返す
