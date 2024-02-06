@@ -56,18 +56,15 @@ class TimeDisplayApp(App):
         with open(csv_path, 'r', newline='', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile)
             data = list(reader)
-            self.hello_label.font_name = data[27][1]
-                #row = next(csv_reader, None)  # Read the first row
-                #if row:
-                    #color_values = [float(value) for value in row]
-                    # 色情報を4つの要素に固定
-                    #while len(color_values) < 4:
-                        #color_values.append(1.0)  # 不足している場合は1.0で埋める
-                    #self.hello_label.color = color_values
 
-                    #row = next(csv_reader, None)  # Read the second row
-                    #if row:
-                        #self.hello_label.font_name = row[0]
+           
+            
+            data1
+            self.hello_label.color = color_values
+
+            
+            
+            self.hello_label.font_name = data[27][1]
 
     def save_settings_to_csv(self):
         # settings.csvに色とフォント情報を保存

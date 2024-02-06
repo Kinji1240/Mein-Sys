@@ -5,7 +5,7 @@ prefecture,
 haikei,1
 idokeido,34.69612,135.508
 weatherday,3,1
-fontcolor,"[1, 1, 1, 1]", 1, 1, 1,0.19999999999999996,1,1
+fontcolor,0.93,0.91,0.88,1
 backcolor,0.6,1.0,1,1
 clockselect,1
 setflg,0
@@ -21,7 +21,7 @@ schedule_pos,150,100
 add_pos,200,100
 
 
-fontcolorclock,"[0.4, 1.0, 0.55, 1.0]",,,
+fontcolorclock,0.93,0.91,0.88,1
 fontclock,MAINSYS\FONT\OradanoGSRR.ttf
 
 
